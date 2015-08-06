@@ -26,6 +26,7 @@
      - glance-api
      - glance-common
      - glance-registry
+     - python-oslo.rootwrap 
      - nova-api
      - nova-cert
      - nova-common
