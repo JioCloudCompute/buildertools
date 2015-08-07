@@ -4,9 +4,10 @@
   vars:
     old_snapshot: 17
     new_snapshot: 06859755-5799-4232-abf4-79fca7853165
+    dns_server: 10.140.12.5
   tasks:
     - copy: src=files/90proxy dest=/etc/apt/apt.conf.d/90proxy  owner=root group=root mode=0644
-    - copy: src=files/resolv.conf dest=/etc/resolv.conf  owner=root group=root mode=0644
+    - template: src=files/resolv.conf dest=/etc/resolv.conf  owner=root group=root mode=0644
     - file: path=/etc/environment state=file owner=root mode=0644
     - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
     - apt_repository: repo='deb http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
