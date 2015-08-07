@@ -1,22 +1,7 @@
 ###used to install a list of packages###
 - hosts: cp*
   sudo: yes
-  vars:
-    vncserver_proxyclient_address: 10.140.12.34
-    glance_api_servers: https://compute-dev-test.jiocloud.com:9292
-    glance_host: compute-dev-test.jiocloud.com
-    novncproxy_base_url: http://compute-dev-test.jiocloud.com:6080/vnc_auto.html
-    neutron_url: https://compute-dev-test.jiocloud.com:9696
-    connection: mysql://rwuser:adminpwd@192.168.100.22/nova
-    neutron_admin_auth_url: https://compute-dev-test.jiocloud.com:5000/v2.0
-    neutron_admin_auth_url2: https://compute-dev-test.jiocloud.com:35357/v3
-    neutron_admin_tenant_id: fbdac7dc636445d199efaa5ff33b20c3
-    keystone_auth_host: compute-dev-test.jiocloud.com
-    keystone_identity_uri: https://compute-dev-test.jiocloud.com:5000
-    keystone_auth_uri: https://compute-dev-test.jiocloud.com:35357/v3 
   tasks:
-  - name: Add host entry
-    lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/nova-hosts') }}" 
   - name: Add contrail repo
     apt_repository: repo='deb [trusted=yes] http://jiocloud.rustedhalo.com/contrailv2/ trusty main' state=present
   - include: apt_get_update.yml
@@ -32,6 +17,7 @@
      - python-psutil
      - python-lxml
      - python-rfc3986
+     - python-rbd
      - python-neutronclient
      - nova-compute
      - contrail-vrouter-agent
@@ -41,4 +27,3 @@
      - python-oslo-messaging
      - oslo-messaging-zmq-receiver
      - python-zmq     
-  - include: cpextension.yml
