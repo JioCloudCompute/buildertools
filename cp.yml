@@ -2,8 +2,6 @@
 - hosts: cp*
   sudo: yes
   tasks:
-  - name: Add contrail repo
-    apt_repository: repo='deb [trusted=yes] http://jiocloud.rustedhalo.com/contrailv2/ trusty main' state=present
   - include: apt_get_update.yml
   - name: Install apt packages
     apt:

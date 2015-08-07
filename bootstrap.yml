@@ -7,6 +7,7 @@
     - copy: src=files/environment dest=/etc/environment  owner=root group=root mode=0644
     - copy: src=files/90proxy dest=/etc/apt/apt.conf.d/90proxy  owner=root group=root mode=0644
     - apt_repository: repo='deb http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
+    - apt_repository: repo='deb [trusted=yes] http://jiocloud.rustedhalo.com/contrailv2/ trusty main' state=present
     - apt_key: data="{{ lookup('file', 'files/archive-canonical.key') }}" state=present
     - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ old_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=absent
     - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ new_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=present
