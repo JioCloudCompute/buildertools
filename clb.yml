@@ -1,0 +1,59 @@
+###used to install a list of packages###
+- hosts: clb1
+  vars:
+    haproxy_app_name:
+    - name: nova
+      port: 8080
+      mode: tcp
+      balance: roundrobin
+      option: abortonclose
+      servers:
+        - {name: server1, ip: 192.168.100.21, port: 8774, inter: 10s, rise: 2, fall: 3} 
+    - name: nova-ec2
+      port: 8081
+      mode: tcp
+      balance: roundrobin
+      option: abortonclose
+      servers:
+        - {name: server1, ip: 192.168.100.21, port: 8773, inter: 10s, rise: 2, fall: 3} 
+    - name: glance-api
+      port: 8082
+      mode: tcp
+      balance: roundrobin
+      option: abortonclose
+      servers: 
+        - {name: server1, ip: 192.168.100.21, port: 9292, inter: 10s, rise: 2, fall: 3} 
+    - name: glance-registry
+      port: 8083
+      mode: tcp
+      balance: roundrobin
+      option: abortonclose
+      servers:
+        - {name: server1, ip: 192.168.100.21, port: 9393, inter: 10s, rise: 2, fall: 3} 
+
+  tasks:
+  - include: apt_get_update.yml
+  - name: Copy config
+    copy: src=files/haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
+  - name: Install apt packages
+    apt:
+      pkg: "{{ item }}"
+      state: latest
+      force: yes
+    register: install_packages
+    until: install_packages|success
+    sudo: yes
+    with_items:
+     - haproxy
+  - name: Update HAProxy config
+    sudo: yes
+    template: src=files/haproxy.cfg
+              dest=/etc/haproxy/haproxy.cfg
+              backup=yes
+    notify:
+      - restart haproxy
+
+  handlers:
+  - name: restart haproxy
+    service: name=haproxy state=restarted
+
