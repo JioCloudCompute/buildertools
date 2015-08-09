@@ -1,0 +1,7 @@
+{% if ntp_servers is not defined %}
+pool.ntp.org
+{% else %}
+{% for server in ntp_servers %}
+{{ server }}
+{% endfor %}
+{% endif %}

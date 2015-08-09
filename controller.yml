@@ -44,3 +44,12 @@
      - python-zmq
      - apache2
   - include: controller_extension.yml
+
+- hosts: cc*
+  name: Set NTP servers
+  sudo: yes
+  vars:
+    ntp_servers:
+    - 10.140.12.27
+  tasks:
+  - include: controller_ntp.yml
