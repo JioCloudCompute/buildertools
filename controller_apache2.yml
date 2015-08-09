@@ -1,0 +1,19 @@
+- name: Install apache2
+  apt: name=apache2
+
+- name: Copy config file
+  template: src=files/apache2_ports.conf dest=/etc/apache2/ports.conf
+
+- name: Enable apache modules
+  apache2_module: state=present name="{{ item }}"
+  notify: restart apache2
+  with_items:
+    - proxy
+    - rewrite
+    - proxy_http
+    - headers
+    - ssl
+
+- name: restart apache2
+  service: name=apache2 state=restarted
+

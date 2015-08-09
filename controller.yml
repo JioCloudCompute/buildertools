@@ -44,3 +44,15 @@
      - python-zmq
      - apache2
   - include: controller_extension.yml
+
+- hosts: cc*
+  sudo: yes
+  vars:
+    ports:
+      - 35357
+      - 5000
+      - 8773
+      - 8774
+      - 8776
+  tasks:
+  - include: controller_apache2.yml
