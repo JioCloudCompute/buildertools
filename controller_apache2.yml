@@ -1,6 +1,3 @@
-- name: Install apache2
-  apt: name=apache2
-
 - name: Copy config file
   template: src=files/apache2_ports.conf dest=/etc/apache2/ports.conf
 
