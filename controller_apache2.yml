@@ -3,13 +3,46 @@
 
 - name: Enable apache modules
   apache2_module: state=present name="{{ item }}"
-  notify: restart apache2
   with_items:
     - proxy
     - rewrite
     - proxy_http
     - headers
     - ssl
+
+- name: Install jiocloud ssl certs
+  apt: pkg="{{ item }}" state=latest force=yes
+  with_items:
+    - ca-certificates
+    - jiocloud-ssl-certificate
+
+- name: Copy ssl certificate to etc
+  command: cp /etc/apache2/certs/jiocloud.com.crt /etc/ssl/certs/
+
+- name: Ensure ssl/keys folder
+  file: dest=/etc/ssl/keys state=directory
+
+- name: Copy ssl key to etc
+  command: cp /etc/apache2/keys/jiocloud.com.key /etc/ssl/keys/
+
+- name: Add crt to usr
+  command: cp /etc/ssl/certs/jiocloud.com.crt /usr/local/share/ca-certificates/selfsigned.crt
+
+- name: Refresh CA list
+  command: update-ca-certificates --fresh
+
+- name: Remove sites-available
+  shell: "rm -rf /etc/apache2/sites-available/*"
+
+- name: Remove sites-enabled
+  shell: "rm -rf /etc/apache2/sites-enabled/*"
+
+- name: Add sites available
+  template: src=files/apache2-site.conf dest="/etc/apache2/sites-available/25-{{ item.name }}.conf"
+  with_items: apache_sites
+
+- name: Add sites enabled
+  shell: "ln -s /etc/apache2/sites-available/* /etc/apache2/sites-enabled"
 
 - name: restart apache2
   service: name=apache2 state=restarted
