@@ -5,6 +5,7 @@
     apache2_key_file: /etc/ssl/keys/jiocloud.com.key
     apache2_chain_file: /etc/ssl/certs/gd_bundle-g2-g1.crt
     apache2_cert_path: /etc/ssl/certs
+    apache2_server_name: compute.staging.jiocloudservices.com
     apache_sites:
     - name: nova-ec2api
       site_port: 8773
