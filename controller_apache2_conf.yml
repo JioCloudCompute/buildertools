@@ -4,27 +4,29 @@
     apache2_cert_path: /etc/ssl/certs
     apache2_server_name: compute.staging.jiocloudservices.com
     when: apache2_server_name is undefined
-    apache2_cert_file: "{{ apache2_cert_path }}/{{ apache2_server_name }}.crt"
-    apache2_key_file: "/etc/ssl/keys/{{ apache2_server_name }}.key"
+    apache2_cert_name: "{{ apache2_server_name }}"
+    when: apache2_cert_name is not defined
+    apache2_cert_file: "/etc/ssl/certs/{{ apache2_cert_name }}.crt"
+    apache2_key_file: "/etc/ssl/keys/{{ apache2_cert_name }}.key"
     apache_sites:
     - name: nova-ec2api
       site_port: 8773
-      site_admin: root@localhost
+      site_admin: jiocloud.computeteam@ril.com
       site_documentroot: nova-ec2api
       site_proxyport: 18773
     - name: nova-osapi
       site_port: 8774
-      site_admin: root@localhost
+      site_admin: jiocloud.computeteam@ril.com
       site_documentroot: nova-osapi
       site_proxyport: 18774
     - name: glance-api
       site_port: 9292
-      site_admin: cloud.devops@ril.com
+      site_admin: jiocloud.computeteam@ril.com
       site_documentroot: glance-api
       site_proxyport: 19292
     - name: glance-registry
       site_port: 9191
-      site_admin: cloud.devops@ril.com
+      site_admin: jiocloud.computeteam@ril.com
       site_documentroot: glance-registry
       site_proxyport: 19191
   tasks:
