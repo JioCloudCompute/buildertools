@@ -44,4 +44,3 @@
      - python-zmq
      - apache2
   - include: controller_extension.yml
-
