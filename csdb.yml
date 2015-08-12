@@ -1,0 +1,127 @@
+- hosts: csdb*
+  sudo: yes
+  tasks:
+  - name: Install MariaDB repository
+    apt_repository: repo='deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/ubuntu trusty main' state=present
+  - name: Install Percona backaup repo
+    apt_repository: repo='deb http://repo.percona.com/apt trusty main' state=present
+#  - name: Add repository key to the system
+#    apt_key: keyserver=keyserver.ubuntu.com id=CBCB082A1BB943DB
+  - name: Install MariaDB Server
+    apt: name=mariadb-server state=latest update_cache=yes force=yes
+  - name: Install python module
+    apt: name=python-mysqldb state=installed
+
+- hosts: csdb1
+  sudo: yes
+  tasks:
+  - name: Create replication account
+    mysql_user: name=repl host="%" password=lper priv="*.*:REPLICATION SLAVE,REPLICATION CLIENT" state=present
+  - name: Create readwrite user
+    mysql_user: name=rwuser host="%" password=adminpwd priv="*.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,RELOAD,SUPER,REPLICATION CLIENT" state=present
+  - name: Modify configuration file to listen on all interfaces
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="bind-address=0.0.0.0"
+
+- hosts: csdb1
+  sudo: yes
+  tasks:
+#  - name: Modify configuration file to setup server ID
+#    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=1"
+  - name: Restart mysql service
+    service: name=mysql state=restarted
+#  - name: Reset master binlog
+#    command: /usr/bin/mysql -u root -e "RESET MASTER"
+#  - name: delete /tmp/percona
+#    file: path=/tmp/percona state=absent
+
+- hosts: csdb1
+  sudo: yes
+  tasks:
+  - name: Install Percona xtrabackup
+    apt: name=percona-xtrabackup state=installed update_cache=yes force=yes
+  - name: Remove backup-dir
+    file: path=/tmp/percona state=absent
+  - name: Make backup of data
+    shell: innobackupex --user=rwuser --password=adminpwd /tmp/percona/
+  - name: Change permission of /tmp/percona
+    file: path=/tmp/percona mode=a+r recurse=yes
+  - name: Own permission of /tmp/percona
+    shell: chown -R vagrant:vagrant /tmp/percona
+#  - name: Change permission of /tmp/percona/*
+#    file: path=/tmp/percona/* mode=0644 recurse=yes
+
+#- hosts: csdb2
+#  sudo: yes
+#  tasks:
+##  - name: Modify configuration file to setup server ID
+##    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=2"
+#  - name: Stop slave
+#    shell: /usr/bin/mysql -urwuser -padminpwd -e "STOP SLAVE " 
+#  - name: Setup replication
+#    shell: /usr/bin/mysql -urwuser -padminpwd -e "CHANGE MASTER to master_host='csdb1', master_user='repl', master_password='lper', master_use_gtid=current_pos"
+#  - name: Start slave
+#    shell: /usr/bin/mysql -urwuser -padminpwd -e "START SLAVE " 
+#  - name: Restart mysql
+#    service: name=mysql state=restarted
+#
+#- hosts: csdb2
+#  sudo: yes
+#  tasks:
+#  - name: mysql replication
+#    mysql_replication: master_host=csdb1 master_password=lper master_user=repl
+#
+- hosts: csdb2
+  sudo: yes
+  tasks:
+  - name: Stop mysql 1
+    service: name=mysql state=stopped
+#  - name: Modify configuration file to setup server ID
+#    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=2"
+  - name: Install sshpass
+    apt: name=sshpass state=installed force=yes
+
+  - name: Install Percona xtrabackup
+    apt: name=percona-xtrabackup state=installed update_cache=yes force=yes
+
+  - name: Remove data directory of backup
+    file: path=/var/lib/percona-data state=absent
+
+  - name: Copy data from server to slave
+    shell: sshpass -p 'vagrant' scp -r vagrant@csdb1:/tmp/percona/ /var/lib/percona-data
+
+  - name: Remove /tmp/latest_backup
+    shell: rm -rf /tmp/latest_backup
+
+  - name: Copy backup
+    shell: cp -rf /var/lib/percona-data /tmp/latest_backup
+
+  - name: Make temp/data
+    file: path=/tmp/data state=directory
+
+  - name: Empty /tmp/data
+    shell: rm -rf /tmp/data/*
+#  - name: Remove /var/lib/mysql
+#    shell: rm -rf /var/lib/mysql
+
+  - name: Move data
+    shell: mv /var/lib/mysql/* /tmp/data
+
+  - name: Load backup
+    shell: innobackupex --copy-back /tmp/latest_backup/*
+
+  - name: Change permission
+    shell: "chown -R mysql: /var/lib/mysql"
+#  - name: Restart mysql service
+#    service: name=mysql state=restarted
+  - name: Service skip-slave-start
+    shell: service mysql start --skip-slave-start
+  - name: Stop slave
+    shell: /usr/bin/mysql -urwuser -padminpwd -e "STOP SLAVE " 
+  - name: Setup replication
+    command: /usr/bin/mysql -uroot -e "CHANGE MASTER TO master_host='csdb1', master_user='repl', master_password='lper', master_log_file = 'mysql-bin.000001',  master_use_gtid=current_pos"
+  - name: Start replication
+    command: /usr/bin/mysql -uroot -e "START SLAVE"
+
+  - name: Start mysql service
+    service: name=mysql state=started
+
