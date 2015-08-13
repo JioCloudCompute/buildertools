@@ -25,8 +25,8 @@
 - hosts: csdb1
   sudo: yes
   tasks:
-#  - name: Modify configuration file to setup server ID
-#    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=1"
+  - name: Modify configuration file to setup server ID
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=1"
   - name: Restart mysql service
     service: name=mysql state=restarted
 #  - name: Reset master binlog
@@ -75,8 +75,8 @@
   tasks:
   - name: Stop mysql 1
     service: name=mysql state=stopped
-#  - name: Modify configuration file to setup server ID
-#    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=2"
+  - name: Modify configuration file to setup server ID
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=2"
   - name: Install sshpass
     apt: name=sshpass state=installed force=yes
 
