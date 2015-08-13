@@ -1,16 +1,9 @@
 - hosts: cc*
   name: Set NTP servers
   sudo: yes
-  vars:
-    ntp_servers:
-    - 10.140.12.27
   tasks:
   - name: Install NTP
     apt: package=ntp state=present
-  - name: Stop service temporarily
-    service: name=ntp state=stopped 
-  - name: Update ntp time
-    shell: "ntpdate -s {{ntp_servers|join(' ') }}"
   - name: Start ntp server
     service: name=ntp state=started
 
