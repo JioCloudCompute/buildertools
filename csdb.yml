@@ -89,6 +89,14 @@
   - name: Copy data from server to slave
     shell: sshpass -p 'vagrant' scp -r vagrant@csdb1:/tmp/percona/ /var/lib/percona-data
 
+  - name: Get master_log_file
+    shell: "cat `find /var/lib/percona-data/|grep 'xtrabackup_binlog_info'`|awk '{ print $1}'"
+    register: master_log_file
+
+  - name: Get master_log_pos
+    shell: "cat `find /var/lib/percona-data/|grep 'xtrabackup_binlog_info'`|awk '{ print $2}'"
+    register: master_log_pos
+
   - name: Remove /tmp/latest_backup
     shell: rm -rf /tmp/latest_backup
 
@@ -109,6 +117,7 @@
   - name: Load backup
     shell: innobackupex --copy-back /tmp/latest_backup/*
 
+
   - name: Change permission
     shell: "chown -R mysql: /var/lib/mysql"
 #  - name: Restart mysql service
@@ -118,7 +127,7 @@
   - name: Stop slave
     shell: /usr/bin/mysql -urwuser -padminpwd -e "STOP SLAVE " 
   - name: Setup replication
-    command: /usr/bin/mysql -uroot -e "CHANGE MASTER TO master_host='csdb1', master_user='repl', master_password='lper', master_log_file = 'mysql-bin.000001',  master_use_gtid=current_pos"
+    command: /usr/bin/mysql -uroot -e "CHANGE MASTER TO master_host='csdb1', master_user='repl', master_password='lper', master_log_file = '{{ master_log_file.stdout }}',  master_log_pos = {{ master_log_pos.stdout }}"
   - name: Start replication
     command: /usr/bin/mysql -uroot -e "START SLAVE"
 
