@@ -1,6 +1,5 @@
 - hosts: all 
   sudo: yes
-#  include_vars: "{{ varfile }}"
   tasks:
     - name: Add variables
       include_vars: "{{ varfile }}"

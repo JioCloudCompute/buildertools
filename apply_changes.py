@@ -13,6 +13,5 @@ call_list = ["ansible-playbook", "-i", inventory, "make_changes.yml", "-u", user
 if limited_host:
   call_list.extend(["-l", limited_host])
 
-#print "Argument: "+" ".join(call_list)
 call(call_list)
 
