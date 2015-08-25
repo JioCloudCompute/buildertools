@@ -1,5 +1,6 @@
 ###used to install a list of packages###
 - hosts: cc*
+  sudo: yes
   tasks:
   - include: tasks/apt_get_update.yml
   - name: Install apt packages
@@ -9,7 +10,6 @@
       force: yes
     register: install_packages
     until: install_packages|success
-    sudo: yes
     with_items:
      - python-pyasn1
      - python-mysqldb
