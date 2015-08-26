@@ -1,0 +1,15 @@
+- name: Install memcached
+  apt: name={{ item }} state={{ ensure }}
+  with_items:
+  - memcached
+  - python-memcache
+
+- name: Service memcached
+  service: name=memcached state=started
+- name: Add line
+  lineinfile: dest=/etc/nova/nova.conf state={{ ensure }} line="memcached_servers={{ memcached_servers | join(',') }}" regexp="memcached_servers=.*"
+- name: Restart nova services
+  service: name="{{ item }}" state=restarted
+  with_items:
+  - nova-api
+
