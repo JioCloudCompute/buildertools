@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars:
+    old_snapshot: 17
+    new_snapshot: 16
+  tasks:
+    - apt_repository: repo='deb http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
+    - apt_key: data="{{ lookup('file', 'files/archive-canonical.key') }}" state=present
+    - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ old_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=absent
+    - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ new_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=present
+    - apt_key: url=http://10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/repo.key state=present
+    - copy: src=files/25-priority dest=/etc/apt/preferences.d/1002-priority  owner=root group=root mode=0644   
