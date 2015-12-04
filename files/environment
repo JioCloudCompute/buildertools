@@ -1,0 +1,4 @@
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+no_proxy="127.0.0.1,localhost,consul,jiocloud.com,jiocloudservices.com"
+http_proxy="http://10.140.12.10:3128/"
+https_proxy="http://10.140.12.10:3128/"
