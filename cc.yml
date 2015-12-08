@@ -1,0 +1,31 @@
+###used to install a list of packages###
+- hosts: cc1
+  tasks:
+  - include: apt_get_update.yml
+  - name: Install apt packages
+    apt:
+      pkg: "{{ item }}"
+      state: latest
+    register: install_packages
+    until: install_packages|success
+    sudo: yes
+    with_items:
+     - glance
+     - glance-api
+     - glance-common
+     - glance-registry
+     - nova-api
+     - nova-cert
+     - nova-common
+     - nova-consoleauth
+     - nova-novncproxy
+     - python-glance
+     - python-glanceclient
+     - python-nova
+     - python-novaclient
+     - python-oslo-log
+     - python-oslo-messaging
+     - nova-conductor
+     - nova-scheduler
+     - oslo-messaging-zmq-receiver
+     - python-zmq     

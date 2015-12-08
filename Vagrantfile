@@ -75,9 +75,10 @@ Vagrant.configure("2") do |config|
         "echo no_proxy='127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com' >> /etc/environment"
       end
 
-      # upgrade puppet
+      if #{node_name}==csdb1
+        config.vm.network "forwarded_port", guest: 3306, host: 3306
+      end 
 
- 
       net_prefix = ENV['NET_PREFIX'] || "192.168.100.0"
       config.vm.network "private_network", :type => :dhcp, :ip => net_prefix, :netmask => "255.255.255.0", :adapter => 2
      config.vm.provision "ansible" do |ansible|
