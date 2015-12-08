@@ -6,10 +6,19 @@
     apt:
       pkg: "{{ item }}"
       state: latest
+      force: yes
     register: install_packages
     until: install_packages|success
     sudo: yes
     with_items:
+     - python-debtcollector
+     - python-psutil
+     - python-jinja2
+     - python-lxml
+     - python-rfc3986
+     - python-boto
+     - python-neutronclient
+     - python-cinderclient
      - glance
      - glance-api
      - glance-common
