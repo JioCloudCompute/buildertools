@@ -1,0 +1,19 @@
+resources:
+  cc:
+    number: 1
+    flavor: large
+    image: trusty
+    networks: default
+    boot_volume: default_volume
+  csdb:
+    number: 1
+    flavor: storage
+    image: trusty
+    networks: default
+    boot_volume: default_volume
+  cp:
+    number: 2
+    flavor: large
+    image: trusty
+    networks: default
+    boot_volume: default_volume

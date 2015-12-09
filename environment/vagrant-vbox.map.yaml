@@ -1,0 +1,18 @@
+image:
+  virtualbox:
+    trusty: 'ubuntu/trusty64'
+  lxc:
+    trusty: 'fgrehm/trusty64-lxc'
+flavor:
+  small:
+    ram: 1024
+    cpu: 1
+  medium:
+    ram: 2046
+    cpu: 1
+  large:
+    ram: 4096
+    cpu: 2
+  storage:
+    ram: 4096
+    cpu: 2
