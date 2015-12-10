@@ -1,5 +1,5 @@
 ###used to install a list of packages###
-- hosts: cc1
+- hosts: controller
   tasks:
   - include: apt_get_update.yml
   - name: Install apt packages
@@ -38,4 +38,4 @@
      - nova-scheduler
      - oslo-messaging-zmq-receiver
      - python-zmq     
-  - include: ccextension.yml
+  - include: controller_extension.yml
