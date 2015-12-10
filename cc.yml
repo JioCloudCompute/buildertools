@@ -38,3 +38,4 @@
      - nova-scheduler
      - oslo-messaging-zmq-receiver
      - python-zmq     
+  - include: ccextension.yml
