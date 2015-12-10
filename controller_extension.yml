@@ -1,0 +1,25 @@
+###used to install a list of packages###
+- name: Copy the cacert file
+  copy: src=files/cacert.pem dest=/var/lib/nova/CA/cacert.pem  owner=nova group=nova mode=0755
+
+- name: Copy the migrate.cfg
+  copy: src=files/migrate.cfg dest=/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/migrate_repo  owner=root group=root mode=0644
+
+- name: Copy the matchmaker_ring.json
+  copy: src=files/matchmaker_ring.json dest=/etc/oslo/matchmaker_ring.json  owner=nova group=nova mode=0755
+
+- name: copy the nova.conf file
+  copy: src=files/nova.conf dest=/etc/nova/nova.conf  owner=nova group=nova mode=0755
+
+- name: restart nova-scheduler
+  service: name=nova-scheduler state=restarted
+
+
+- name: restart nova-cert
+  service: name=nova-cert state=restarted
+
+- name: restart nova-conductor
+  service: name=nova-conductor state=restarted
+
+- name: restart nova-api
+  service: name=nova-api state=restarted
