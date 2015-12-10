@@ -1,0 +1,27 @@
+###used to install a list of packages###
+- hosts: cp*
+  sudo: yes
+  tasks:
+  - include: apt_get_update.yml
+  - name: Install apt packages
+    apt:
+      pkg: "{{ item }}"
+      state: latest
+      force: yes
+    register: install_packages
+    until: install_packages|success
+    with_items:
+     - python-debtcollector
+     - python-psutil
+     - python-lxml
+     - python-rfc3986
+     - python-rbd
+     - python-neutronclient
+     - nova-compute
+     - contrail-vrouter-agent
+     - python-cinderclient
+     - ceph
+     - python-oslo-log
+     - python-oslo-messaging
+     - oslo-messaging-zmq-receiver
+     - python-zmq     
