@@ -11,6 +11,9 @@
     until: install_packages|success
     sudo: yes
     with_items:
+     - python-pyasn1
+     - python-mysqldb
+     - python-memcache
      - python-debtcollector
      - python-psutil
      - python-jinja2
@@ -34,8 +37,10 @@
      - python-novaclient
      - python-oslo-log
      - python-oslo-messaging
+     - python-oslo-rootwrap
      - nova-conductor
      - nova-scheduler
      - oslo-messaging-zmq-receiver
-     - python-zmq     
+     - python-zmq
+     - apache2
   - include: controller_extension.yml
