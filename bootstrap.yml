@@ -3,7 +3,7 @@
   sudo: yes
   vars:
     old_snapshot: 17
-    new_snapshot: 06859755-5799-4232-abf4-79fca7853165
+    new_snapshot: f8fc1c4a-054f-46aa-8050-7fe21324cd86
     dns_server: 10.140.12.5
   tasks:
     - copy: src=files/90proxy dest=/etc/apt/apt.conf.d/90proxy  owner=root group=root mode=0644
