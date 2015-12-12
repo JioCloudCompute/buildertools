@@ -1,5 +1,5 @@
 ###used to install a list of packages###
-- hosts: clb1
+- hosts: clb
   vars:
     haproxy_app_name:
     - name: nova
