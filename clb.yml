@@ -1,0 +1,19 @@
+###used to install a list of packages###
+- hosts: clb
+  sudo: yes
+  tasks:
+  - include: apt_get_update.yml
+  - name: Install apt packages
+    apt:
+      pkg: "{{ item }}"
+      state: latest
+      force: yes
+    register: install_packages
+    until: install_packages|success
+    with_items:
+     - haproxy
+  - name: Copy config
+    copy: src=files/haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
+  - name: restart haproxy
+    service: name=haproxy state=restarted
+
