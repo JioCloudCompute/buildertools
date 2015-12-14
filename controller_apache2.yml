@@ -1,49 +1,51 @@
-- name: Copy config file
-  template: src=files/apache2_ports.conf dest=/etc/apache2/ports.conf
+- hosts: cc*
+  sudo: yes
+  vars:
+    ports:
+      - 35357
+      - 5000
+      - 8773
+      - 8774
+      - 8776
+    apache_sites:
+    - name: nova-ec2api
+      site_port: 8773
+      site_admin: root@localhost
+      site_documentroot: nova-ec2api
+      site_proxyport: 18773
+    - name: nova-osapi
+      site_port: 8774
+      site_admin: root@localhost
+      site_documentroot: nova-osapi
+      site_proxyport: 18774
+  tasks:
+  - name: Copy config file
+    template: src=templates/apache2_ports.conf dest=/etc/apache2/ports.conf
 
-- name: Enable apache modules
-  apache2_module: state=present name="{{ item }}"
-  with_items:
-    - proxy
-    - rewrite
-    - proxy_http
-    - headers
-    - ssl
+  - name: Enable apache modules
+    apache2_module: state=present name="{{ item }}"
+    with_items:
+      - proxy
+      - rewrite
+      - proxy_http
+      - headers
+      - ssl
 
-- name: Install jiocloud ssl certs
-  apt: pkg="{{ item }}" state=latest force=yes
-  with_items:
-    - ca-certificates
-    - jiocloud-ssl-certificate
+  - name: Install jiocloud ssl certs
+    apt: pkg=ca-certificates state=latest force=yes
 
-- name: Copy ssl certificate to etc
-  command: cp /etc/apache2/certs/jiocloud.com.crt /etc/ssl/certs/
+  - include: jiocloud_ssl.yml
 
-- name: Ensure ssl/keys folder
-  file: dest=/etc/ssl/keys state=directory
+  - name: Remove sites-enabled
+    shell: "rm -rf /etc/apache2/sites-enabled/*"
 
-- name: Copy ssl key to etc
-  command: cp /etc/apache2/keys/jiocloud.com.key /etc/ssl/keys/
+  - name: Add sites available
+    template: src=templates/apache2-site.conf dest="/etc/apache2/sites-available/25-{{ item.name }}.conf"
+    with_items: apache_sites
 
-- name: Add crt to usr
-  command: cp /etc/ssl/certs/jiocloud.com.crt /usr/local/share/ca-certificates/selfsigned.crt
+  - name: Add sites enabled
+    shell: "ln -s /etc/apache2/sites-available/* /etc/apache2/sites-enabled"
 
-- name: Refresh CA list
-  command: update-ca-certificates --fresh
-
-- name: Remove sites-available
-  shell: "rm -rf /etc/apache2/sites-available/*"
-
-- name: Remove sites-enabled
-  shell: "rm -rf /etc/apache2/sites-enabled/*"
-
-- name: Add sites available
-  template: src=files/apache2-site.conf dest="/etc/apache2/sites-available/25-{{ item.name }}.conf"
-  with_items: apache_sites
-
-- name: Add sites enabled
-  shell: "ln -s /etc/apache2/sites-available/* /etc/apache2/sites-enabled"
-
-- name: restart apache2
-  service: name=apache2 state=restarted
+  - name: restart apache2
+    service: name=apache2 state=restarted
 

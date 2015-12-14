@@ -1,0 +1,18 @@
+  - name: Install jiocloud ssl certs
+    apt: pkg=jiocloud-ssl-certificate state=latest force=yes
+
+  - name: Copy ssl certificate to etc
+    command: cp /etc/apache2/certs/jiocloud.com.crt /etc/ssl/certs/
+
+  - name: Ensure ssl/keys folder
+    file: dest=/etc/ssl/keys state=directory
+
+  - name: Copy ssl key to etc
+    command: cp /etc/apache2/keys/jiocloud.com.key /etc/ssl/keys/
+
+  - name: Add crt to usr
+    command: cp /etc/ssl/certs/jiocloud.com.crt /usr/local/share/ca-certificates/selfsigned.crt
+
+  - name: Refresh CA list
+    command: update-ca-certificates --fresh
+
