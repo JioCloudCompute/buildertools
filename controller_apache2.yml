@@ -1,0 +1,16 @@
+- hosts: cc*
+  sudo: yes
+  tasks:
+  - name: Enable apache modules
+    apache2_module: state=present name="{{ item }}"
+    with_items:
+      - proxy
+      - rewrite
+      - proxy_http
+      - headers
+      - ssl
+
+  - name: Install ca-certificates
+    apt: pkg=ca-certificates state=latest force=yes
+
+- include: controller_apache2_conf.yml
