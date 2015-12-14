@@ -11,6 +11,12 @@
     register: install_packages
     until: install_packages|success
     with_items:
+     - python-geventhttpclient
+     - python-pycassa
+     - contrail-lib
+     - contrail-nova-driver
+     - contrail-utils
+     - python-contrail
      - python-debtcollector
      - python-psutil
      - python-lxml
