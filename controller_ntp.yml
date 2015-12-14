@@ -8,9 +8,9 @@
   - name: Install NTP
     apt: package=ntp state=present
   - name: Copy NTP config
-    template: src=files/ntp.conf dest=/etc/ntp.conf
+    template: src=templates/ntp.conf dest=/etc/ntp.conf
   - name: Add temp file
-    template: src=files/ntp-servers.list dest=/tmp/ntp-servers.list
+    template: src=templates/ntp-servers.list dest=/tmp/ntp-servers.list
   - name: Stop service temporarily
     service: name=ntp state=stopped 
   - name: Update ntp time
