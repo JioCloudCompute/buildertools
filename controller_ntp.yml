@@ -1,3 +1,10 @@
+- hosts: cc*
+  name: Set NTP servers
+  sudo: yes
+  vars:
+    ntp_servers:
+    - 10.140.12.27
+  tasks:
   - name: Install NTP
     apt: package=ntp state=present
   - name: Copy NTP config
