@@ -11,6 +11,17 @@
     register: install_packages
     until: install_packages|success
     with_items:
+     - python-mysqldb
+     - python-oslo-concurrency
+     - python-paste
+     - python-pastedeploy
+     - python-routes
+     - python-glanceclient
+     - python-oslo-db
+     - python-pyasn1
+     - python-novaclient
+     - python-requests
+     - python-keystoneclient
      - python-geventhttpclient
      - python-pycassa
      - contrail-lib
