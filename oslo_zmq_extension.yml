@@ -1,0 +1,23 @@
+##This file is used to create a openstack group and adding nova and oslo to the same.
+
+
+
+- name: Create openstack group
+  group: name=openstack state=present
+  sudo: yes
+
+
+- name: Addition of users to openstck group
+  user: name={{ item }}  groups=openstack append=yes
+  sudo: yes
+  with_items:
+   - nova
+   - oslo
+
+- name: creation of required oslo-messaging-zmq-receiver.conf file
+  copy: src=files/oslo-messaging-zmq-receiver.conf dest=/etc/init/oslo-messaging-zmq-receiver.conf  owner=root group=root mode=0644  
+  sudo: yes
+
+- name: Restart oslo-messaging-zmq-receiver after changing configuration
+  service: name=oslo-messaging-zmq-receiver state=restarted  
+  sudo: yes
