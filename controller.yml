@@ -43,4 +43,5 @@
      - oslo-messaging-zmq-receiver
      - python-zmq
      - apache2
+  - include: oslo_zmq_extension.yml
   - include: controller_extension.yml
