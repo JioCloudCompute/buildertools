@@ -1,4 +1,4 @@
-- hosts: cc*
+- hosts: all
   name: Set NTP servers
   sudo: yes
   tasks:
