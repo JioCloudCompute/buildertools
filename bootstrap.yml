@@ -10,6 +10,7 @@
     - template: src=files/resolv.conf dest=/etc/resolv.conf  owner=root group=root mode=0644
     - file: path=/etc/environment state=file owner=root mode=0644
     - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
+    - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"
     - apt_repository: repo='deb http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
     - apt_repository: repo='deb [trusted=yes] http://jiocloud.rustedhalo.com/contrailv2/ trusty main' state=present
     - apt_key: data="{{ lookup('file', 'files/archive-canonical.key') }}" state=present
