@@ -1,0 +1,78 @@
+- hosts: csdb1
+  sudo: yes
+  tasks:
+  - name: Install Percona xtrabackup
+    apt: name=percona-xtrabackup state=installed update_cache=yes force=yes
+  - name: Remove backup-dir
+    file: path=/tmp/percona state=absent
+  - name: Make backup of data
+    shell: innobackupex --user=rwuser --password=adminpwd /tmp/percona/
+  - name: Change permission of /tmp/percona
+    file: path=/tmp/percona mode=a+r recurse=yes
+  - name: Own permission of /tmp/percona
+    shell: chown -R vagrant:vagrant /tmp/percona
+
+#- hosts: csdb2
+#  sudo: yes
+#  tasks:
+#  - name: mysql replication
+#    mysql_replication: master_host=csdb1 master_password=lper master_user=repl
+#
+- hosts: csdb2
+  sudo: yes
+  tasks:
+  - name: Stop mysql 1
+    service: name=mysql state=stopped
+
+  - name: Install sshpass
+    apt: name=sshpass state=installed force=yes
+
+  - name: Install Percona xtrabackup
+    apt: name=percona-xtrabackup state=installed update_cache=yes force=yes
+
+  - name: Remove data directory of backup
+    file: path=/var/lib/percona-data state=absent
+
+  - name: Copy data from server to slave
+    shell: sshpass -p 'vagrant' scp -r vagrant@csdb1:/tmp/percona/ /var/lib/percona-data
+
+  - name: Get master_log_file
+    shell: "cat `find /var/lib/percona-data/|grep 'xtrabackup_binlog_info'`|awk '{ print $1}'"
+    register: master_log_file
+
+  - name: Get master_log_pos
+    shell: "cat `find /var/lib/percona-data/|grep 'xtrabackup_binlog_info'`|awk '{ print $2}'"
+    register: master_log_pos
+
+  - name: Remove /tmp/latest_backup
+    shell: rm -rf /tmp/latest_backup
+
+  - name: Copy backup
+    shell: cp -rf /var/lib/percona-data /tmp/latest_backup
+
+  - name: Make temp/data
+    file: path=/tmp/data state=directory
+
+  - name: Empty /tmp/data
+    shell: rm -rf /tmp/data/*
+
+  - name: Move data
+    shell: mv /var/lib/mysql/* /tmp/data
+
+  - name: Load backup
+    shell: innobackupex --copy-back /tmp/latest_backup/*
+
+  - name: Change permission
+    shell: "chown -R mysql: /var/lib/mysql"
+  - name: Service skip-slave-start
+    shell: service mysql start --skip-slave-start
+  - name: Stop slave
+    shell: /usr/bin/mysql -urwuser -padminpwd -e "STOP SLAVE " 
+  - name: Setup replication
+    command: /usr/bin/mysql -uroot -e "CHANGE MASTER TO master_host='csdb1', master_user='repl', master_password='lper', master_log_file = '{{ master_log_file.stdout }}',  master_log_pos = {{ master_log_pos.stdout }}"
+  - name: Start replication
+    command: /usr/bin/mysql -uroot -e "START SLAVE"
+
+  - name: Start mysql service
+    service: name=mysql state=started
+
