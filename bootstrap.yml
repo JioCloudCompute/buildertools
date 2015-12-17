@@ -3,11 +3,8 @@
   sudo: yes
   vars:
     old_snapshot: 17
-    new_snapshot: f8fc1c4a-054f-46aa-8050-7fe21324cd86
-    dns_server: 10.140.12.5
+    new_snapshot: c164c87e-2a91-4dba-a833-9e5d8c0d543c
   tasks:
-    - copy: src=files/90proxy dest=/etc/apt/apt.conf.d/90proxy  owner=root group=root mode=0644
-    - template: src=files/resolv.conf dest=/etc/resolv.conf  owner=root group=root mode=0644
     - file: path=/etc/environment state=file owner=root mode=0644
     - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
     - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"
@@ -20,4 +17,5 @@
     - copy: src=files/25-priority dest=/etc/apt/preferences.d/1002-priority  owner=root group=root mode=0644
     - apt: package=ntp state=present update_cache=yes
     - service: name=ntp state=started
+    - apt: package=vim state=present
 

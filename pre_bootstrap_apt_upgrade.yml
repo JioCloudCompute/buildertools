@@ -1,0 +1,8 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - shell: 'apt-get update'
+  - shell: 'apt-get -y upgrade'
+  - shell: 'reboot'
+
