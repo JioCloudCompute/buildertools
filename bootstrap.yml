@@ -6,8 +6,8 @@
     new_snapshot: c164c87e-2a91-4dba-a833-9e5d8c0d543c
   tasks:
     - file: path=/etc/environment state=file owner=root mode=0644
-    # - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
-    # - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"
+    - lineinfile: dest=/etc/environment state=present line="{{ lookup('file', 'files/environment') }}"
+    - lineinfile: dest=/etc/hosts state=present line="{{ lookup('file', 'files/etchosts') }}"
     - apt_repository: repo='deb [arch=amd64] http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
     - apt_key: data="{{ lookup('file', 'files/archive-canonical.key') }}" state=present
     - apt_repository: repo='deb [arch=amd64] http://10.140.221.229/snapshots/{{ old_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=absent
