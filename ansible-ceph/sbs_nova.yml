@@ -1,0 +1,4 @@
+
+  - name: Change nova.conf
+    lineinfile: dest=/etc/nova/nova.conf line="{{ lookup('file', 'files/sbs/nova.conf') }}"
+
