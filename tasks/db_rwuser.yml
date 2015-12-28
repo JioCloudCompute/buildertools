@@ -1,0 +1,2 @@
+- name: Create readwrite user
+  mysql_user: name="{{ db_admin_user }}" host="%" password="{{ db_admin_password }}" priv="*.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,INDEX,ALTER,RELOAD,SUPER,REPLICATION CLIENT" state=present

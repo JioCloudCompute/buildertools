@@ -12,5 +12,8 @@
 
   - name: Install ca-certificates
     apt: pkg=ca-certificates state=latest force=yes
-
-- include: controller_apache2_conf.yml
+  - include: tasks/apache2_conf.yml
+  - include: tasks/jiocloud_ssl.yml
+  - include: tasks/jiocloud_key.yml
+  - name: restart apache2
+    service: name=apache2 state=restarted

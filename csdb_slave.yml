@@ -1,0 +1,29 @@
+- hosts: csdb2
+  sudo: yes
+  tasks:
+  - include: tasks/basic_db.yml
+  - include: tasks/db_rwuser.yml
+  - name: Modify configuration file to listen on all interfaces
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="bind-address=0.0.0.0"
+  - name: Modify configuration file to setup server ID
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=2"
+  - name: Get master_log_pos
+    shell: mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -h "{{ master_host }}" -e "show master status;"|sed "s/|/ /"|awk 'END{print}'|awk '{print $2}'
+    register: master_log_pos
+  
+  - name: Get master_log_file
+    shell: mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -h "{{ master_host }}" -e "show master status;"|sed "s/|/ /"|awk 'END{print}'|awk '{print $1}'
+    register: master_log_file
+
+  - name: Restart mysql service
+    service: name=mysql state=restarted
+  - name: Stop slave
+    shell: /usr/bin/mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -e "STOP SLAVE "
+  - name: Setup replication
+    #csdb1 must be updated to appropriate name.
+    shell: /usr/bin/mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -e "CHANGE MASTER to master_host='{{ master_host }}', master_user='{{ db_slave_user }}', master_password='{{ db_slave_password }}', master_log_file = '{{ master_log_file.stdout }}', master_log_pos = {{ master_log_pos.stdout }}"
+  - name: Start slave
+    shell: /usr/bin/mysql -u"{{ db_admin_user }}" -p"{{ db_admin_password }}" -e "START SLAVE " 
+  - name: Restart mysql
+    service: name=mysql state=restarted
+

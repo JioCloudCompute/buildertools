@@ -6,13 +6,12 @@
     new_snapshot: c164c87e-2a91-4dba-a833-9e5d8c0d543c
   tasks:
     - file: path=/etc/environment state=file owner=root mode=0644
-    - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
-    - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"
-    - apt_repository: repo='deb http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
-    - apt_repository: repo='deb [trusted=yes] http://jiocloud.rustedhalo.com/contrailv2/ trusty main' state=present
+    # - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
+    # - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"
+    - apt_repository: repo='deb [arch=amd64] http://10.140.221.229/snapshots/1/ubuntu-cloud.archive.canonical.com/ubuntu/ trusty-updates/kilo main' state=present
     - apt_key: data="{{ lookup('file', 'files/archive-canonical.key') }}" state=present
-    - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ old_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=absent
-    - apt_repository: repo='deb http://10.140.221.229/snapshots/{{ new_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=present
+    - apt_repository: repo='deb [arch=amd64] http://10.140.221.229/snapshots/{{ old_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=absent
+    - apt_repository: repo='deb [arch=amd64] http://10.140.221.229/snapshots/{{ new_snapshot }}/10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/ jiocloud main' state=present
     - apt_key: url=http://10.140.221.229/apt/JioCloudComputeAdmin/JioCloudComputeAdmin/repo.key state=present
     - copy: src=files/25-priority dest=/etc/apt/preferences.d/1002-priority  owner=root group=root mode=0644
     - apt: package=ntp state=present update_cache=yes
