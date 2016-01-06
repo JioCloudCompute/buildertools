@@ -1,0 +1,11 @@
+#- name: Install dnsmasq package
+#  apt: package="{{ item }}" state=present update_cache=yes
+#  with_items:
+#  - dnsmasq
+
+- name: Copy the consul file
+  copy: src=files/10-consul dest=/etc/dnsmasq.d/10-consul
+- name: Restart the dnsmasq
+  service: name=dnsmasq state=restarted
+
+

@@ -1,0 +1,5 @@
+###used to install a list of packages###
+- hosts: all
+  sudo: yes
+  tasks:
+  - include: consul_template_config.yml

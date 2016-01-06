@@ -1,0 +1,14 @@
+{
+  "ID": "glance",
+  "Name": "glance",
+  "Tags": [
+    "real"
+  ],
+  "Address": "127.0.0.1",
+  "Port": 9292,
+  "Check": {
+    "Script": "/var/lib/jiocloud/service_checks/glance.sh",
+    "Interval": "10s"
+  }
+}
+

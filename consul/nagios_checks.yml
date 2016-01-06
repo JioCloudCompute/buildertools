@@ -1,0 +1,51 @@
+#- name: Install dnsmasq package
+#  apt: package="{{ item }}" state=present update_cache=yes
+#  with_items:
+#  - nagios-plugins
+
+- name: create directory structure
+  file: path=/var/lib/jiocloud/service_checks state=directory mode=0755
+#- name: Copy the nova check file
+#  copy: src=files/nova.sh dest=/var/lib/jiocloud/service_checks/nova.sh mode=755
+
+
+#- name: Copy the nova service file
+#  copy: src=files/nova.json dest=/etc/consul.d/nova.json mode=755
+
+
+#- name: Registering the nova service
+#  shell: curl -vX POST http://localhost:8500/v1/agent/service/register -d @/etc/consul.d/nova.json
+
+- name: Copy the glance check file
+  copy: src=files/glance.sh dest=/var/lib/jiocloud/service_checks/glance.sh mode=755
+
+
+- name: Copy the glance service file
+  copy: src=files/glance.json dest=/etc/consul.d/glance.json mode=755
+
+
+- name: Registering the glance service
+  shell: curl -vX POST http://localhost:8500/v1/agent/service/register -d @/etc/consul.d/glance.json
+
+- name: Copy the glance-registry check file
+  copy: src=files/glance-registry.sh dest=/var/lib/jiocloud/service_checks/glance-registry.sh mode=755
+
+
+- name: Copy the glance-registry service file
+  copy: src=files/glance-registry.json dest=/etc/consul.d/glance-registry.json mode=755
+
+
+- name: Registering the glance-registry service
+  shell: curl -vX POST http://localhost:8500/v1/agent/service/register -d @/etc/consul.d/glance-registry.json
+
+
+- name: Copy the ec2api check file
+  copy: src=files/ec2api.sh dest=/var/lib/jiocloud/service_checks/ec2api.sh mode=755
+
+
+- name: Copy the ec2api service file
+  copy: src=files/ec2api.json dest=/etc/consul.d/ec2api.json mode=755
+
+
+- name: Registering the ec2api service
+  shell: curl -vX POST http://localhost:8500/v1/agent/service/register -d @/etc/consul.d/ec2api.json
