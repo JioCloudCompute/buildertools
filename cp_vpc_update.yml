@@ -1,0 +1,17 @@
+---
+- host: cp*
+  sudo: yes
+  tasks:
+  - name: Copy my script
+    copy: src=files/vpc-change.sh dest=/tmp/vpc-change.sh mode=0700
+  - name: Run the file
+    shell: /tmp/vpc-change.sh > /tmp/change.out
+    async: 3600
+    poll: 0
+    register: userdata_status
+  - name: Check job
+    async_status: jid={{ userdata_status.ansible_job_id }}
+    register: job_result
+    until: job_result.finished
+    retries: 500
+
