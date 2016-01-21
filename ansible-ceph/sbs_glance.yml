@@ -1,3 +1,0 @@
-#  - name: Change glance.conf
-#    lineinfile: dest=/etc/glance/glance.conf line="{{ lookup('file', 'files/sbs/glance.conf') }}"
-

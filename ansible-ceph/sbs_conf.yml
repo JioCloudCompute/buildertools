@@ -1,4 +1,0 @@
-
-  - name: Copy ceph conf
-    copy: dest=/etc/ceph/ceph.conf src=files/sbs/ceph.conf
-
