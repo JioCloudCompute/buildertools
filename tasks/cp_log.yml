@@ -1,0 +1,23 @@
+- name: Install git
+  apt: name=git state=present
+- name: Install python-boto3
+  apt: name=python-boto3 state=present
+- name: Make log-backup folder
+  file: path=/root/log-backup state=directory
+- name: copy cloning script
+  copy: src=files/git_clone.sh dest=/tmp/git_clone.sh mode=0755
+- name: Clone monitor-common
+  shell: "/tmp/git_clone.sh https://github.com/JioCloudCompute/AWSS3ConfigManager.git /root/log-backup/AWSS3ConfigManager > /tmp/git.log 2>&1"
+- name: Delete cloning script
+  file: path=/tmp/git_clone.sh state=absent
+- name: Copy script to upload log
+  copy: src=files/upload-log.sh dest=/root/log-backup/AWSS3ConfigManager/configManager/upload-log.sh mode=0755
+- name: Copy top script
+  copy: src=files/log-backup.sh dest=/root/log-backup/log-backup.sh mode=0755
+- name: Add aws folder
+  file: path=/root/.aws state=directory
+- name: Copy aws credentials
+  template: src=templates/aws_credential dest=/root/.aws/credentials
+- name: Add cron job
+  cron: name="Log backup" state=present hour="4" minute="0" job="/root/log-backup/log-backup.sh > /tmp/log-backup.log 2>&1"
+
