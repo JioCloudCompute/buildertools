@@ -1,0 +1,13 @@
+---
+- hosts: cp*
+  sudo: yes
+  tasks:
+    - shell: nslookup vpc.ind-west-1.staging.jiocloudservices.com
+      register: nslookup
+    - debug: msg="nslookup output = {{ nslookup.stdout }}"
+    - shell: grep Xmpp /var/log/contrail/contrail-vrouter.log
+      register: xampp
+    - debug: msg="Xmpp output = {{ xampp.stdout }}"
+    - shell: ifquery vhost0
+      register: vhost0
+    - debug: msg="vhost0 out = {{ vhost0.stdout }}"

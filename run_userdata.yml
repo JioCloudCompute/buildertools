@@ -1,0 +1,24 @@
+---
+- hosts: cp*
+  sudo: yes
+  vars:
+  - http_proxy: "http://10.140.218.59:3128/"
+  tasks:
+    - name: Add https_proxy in wgetrc
+      lineinfile: dest=/etc/wgetrc state=present regexp="https_proxy = .*" line="https_proxy = {{ http_proxy }}"
+    - name: Add http_proxy in wgetrc
+      lineinfile: dest=/etc/wgetrc state=present regexp="http_proxy = .*" line="http_proxy = {{ http_proxy }}"
+    - name: Copy userdata file
+      copy: src=files/userdata_vrouter.txt dest=/tmp/userdata.sh mode=755
+    - name: Run shell on background
+      shell: "bash /tmp/userdata.sh > /tmp/result.out 2>&1"
+      async: 3600
+      poll: 0
+      register: userdata_status
+    - name: Check job
+      async_status: jid={{ userdata_status.ansible_job_id }}
+      register: job_result
+      until: job_result.finished
+      retries: 500
+    - name: Restart contrail service
+      service: name=contrail-vrouter-agent state=restarted
