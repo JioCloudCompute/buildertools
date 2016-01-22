@@ -1,0 +1,28 @@
+
+- name: Create group consul
+  group: name=consul state=present
+
+- name: Create user consul
+  user: name=consul group=consul shell=/bin/bash state=present
+
+- name: create directory structure
+  file: path=/etc/consul.d/server state=directory mode=0755
+
+- name: create directory structure
+  file: path=/etc/consul.d/bootstrap state=directory mode=0755
+
+- name: create directory structure
+  file: path=/etc/consul.d/client state=directory mode=0755
+
+- name: create directory structure
+  file: path=/var/consul state=directory mode=755 owner=consul group=consul
+
+#- name: create a bootstrap config
+#  copy: src=files/bootstrap.json dest=/etc/consul.d/bootstrap/config.json
+
+- name: create server config
+  template: src=templates/server.json dest=/etc/consul.d/server/config.json
+
+- name: create upstart script
+  copy: src=files/consul.conf dest=/etc/init/consul.conf
+

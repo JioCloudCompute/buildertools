@@ -1,0 +1,5 @@
+- name: Copy the install script
+  copy: src=files/installconsultemplate.sh dest=/tmp/installtemplate.sh mode=755
+- name: Downloading the source code for consul
+  shell: /bin/bash -c "/tmp/installtemplate.sh"
+

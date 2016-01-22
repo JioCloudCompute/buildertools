@@ -1,0 +1,14 @@
+{
+  "ID": "ec2api",
+  "Name": "ec2api",
+  "Tags": [
+    "real"
+  ],
+  "Address": "127.0.0.1",
+  "Port": 8788,
+  "Check": {
+    "Script": "/var/lib/jiocloud/service_checks/ec2api.sh",
+    "Interval": "10s"
+  }
+}
+

@@ -1,0 +1,14 @@
+{
+  "ID": "nova",
+  "Name": "nova",
+  "Tags": [
+    "real"
+  ],
+  "Address": "127.0.0.1",
+  "Port": 8774,
+  "Check": {
+    "Script": "/var/lib/jiocloud/service_checks/nova.sh",
+    "Interval": "10s"
+  }
+}
+

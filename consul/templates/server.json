@@ -1,0 +1,10 @@
+{
+    "bootstrap": false,
+    "server": true,
+    "datacenter": "compst2",
+    "data_dir": "/var/consul",
+    "encrypt": "{{token}}",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "start_join": ["{{member1}}", "{{member2}}"]
+}

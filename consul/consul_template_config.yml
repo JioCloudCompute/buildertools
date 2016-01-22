@@ -1,0 +1,22 @@
+
+- name: create directory structure
+  file: path=/opt/consul-template/bin state=directory mode=0755
+
+- name: create directory structure
+  file: path=/opt/consul-template/config state=directory mode=0755
+
+- name: create directory structure
+  file: path=/opt/consul-template/templates state=directory mode=0755
+
+- name: copy consul-template config
+  copy: src=files/consul-template.config dest=/opt/consul-template/config/consul-template.cfg mode=0755
+
+
+- name: copy consul-template upstart
+  copy: src=files/consul-template.conf dest=/etc/init/consul-template.conf mode=0755
+
+- name: copy haproxy-template config
+  copy: src=files/haproxy.cfg dest=/opt/consul-template/templates/haproxy.ctmpl mode=0755
+
+- name: restart consul-template
+  service: name=consul-template state=restarted
