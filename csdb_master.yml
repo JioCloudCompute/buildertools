@@ -1,0 +1,15 @@
+- hosts: csdb1
+  sudo: yes
+  tasks:
+  - include: tasks/basic_db.yml
+  - include: tasks/db_rwuser.yml
+  - name: Create replication account
+    mysql_user: name="{{ db_slave_user }}" host="%" password="{{ db_slave_password }}" priv="*.*:REPLICATION SLAVE,REPLICATION CLIENT" state=present
+  - name: Modify configuration file to listen on all interfaces
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^bind-address" line="bind-address=0.0.0.0"
+  - name: Modify configuration file to setup server ID
+    lineinfile: dest=/etc/mysql/my.cnf regexp="^#server-id" line="server-id=1"
+  - name: Restart mysql service
+    service: name=mysql state=restarted
+
+

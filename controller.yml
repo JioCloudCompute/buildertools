@@ -1,7 +1,8 @@
 ###used to install a list of packages###
-- hosts: controller
+- hosts: cc*
+  sudo: yes
   tasks:
-  - include: apt_get_update.yml
+  - include: tasks/apt_get_update.yml
   - name: Install apt packages
     apt:
       pkg: "{{ item }}"
@@ -9,7 +10,6 @@
       force: yes
     register: install_packages
     until: install_packages|success
-    sudo: yes
     with_items:
      - python-pyasn1
      - python-mysqldb
@@ -43,6 +43,6 @@
      - oslo-messaging-zmq-receiver
      - python-zmq
      - apache2
-  - include: oslo_zmq_extension.yml
-  - include: controller_extension.yml
+  - include: tasks/oslo_zmq_extension.yml
+  - include: tasks/controller_extension.yml
 

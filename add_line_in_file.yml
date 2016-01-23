@@ -1,0 +1,7 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+    - name: Add line into file
+      lineinfile: dest="{{ file }}" state=present line="{{ line }}"
+

@@ -1,0 +1,14 @@
+#  - name: Add repo of rbd
+#    apt_repository: repo='deb http://ceph.com/debian-hammer/ trusty main' state=present
+#
+#  - name: Add repo key
+#    #apt_key: data="{{ lookup('file', 'files/sbs/release.asc') }}" state=present 
+#    apt_key: data="{{ lookup('file', 'files/release.asc') }}" state=present 
+#
+  - name: Install packages
+    apt: package="{{ item }}" state=present update_cache=yes
+    with_items:
+    - python-rbd
+    - ceph-common
+    - libvirt-bin
+

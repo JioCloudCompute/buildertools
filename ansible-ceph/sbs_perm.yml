@@ -1,0 +1,6 @@
+  - name: Copy ceph keyring file
+    copy: dest=/etc/ceph/ceph.client.cinder.keyring src=files/sbs/ceph.client.cinder.keyring owner=cinder group=cinder
+
+  - name: Copy glance keyring file
+    copy: dest=/etc/ceph/ceph.client.glance.keyring src=files/sbs/ceph.client.glance.keyring  owner=glance group=glance
+

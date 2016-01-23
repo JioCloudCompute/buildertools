@@ -1,8 +1,8 @@
 ###used to install a list of packages###
-- hosts: clb
+- hosts: clb*
   sudo: yes
   tasks:
-  - include: apt_get_update.yml
+  - include: tasks/apt_get_update.yml
   - name: Install apt packages
     apt:
       pkg: "{{ item }}"
