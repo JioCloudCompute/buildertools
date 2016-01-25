@@ -1,0 +1,25 @@
+  - name: Add percona repo
+    apt_repository: repo="deb http://repo.percona.com/apt trusty main" state=present update_cache=yes
+  - name: Install percona
+    apt: name=percona-xtrabackup state=present force=yes
+  - name: Create github repo -1
+    shell: mkdir -p /root/db-backup
+  - name: Install git
+    apt: name=git state=present
+  - name: copy cloning script
+    copy: src=files/git_clone.sh dest=/tmp/git_clone.sh mode=0755
+  - name: Clone directory
+    shell: "/tmp/git_clone.sh https://github.com/JioCloudCompute/AWSS3ConfigManager /root/db-backup/AWSS3ConfigManager"
+  - name: Delete cloning script
+    file: path=/tmp/git_clone.sh state=absent
+  - name: Add aws folder
+    file: path=/root/.aws state=directory
+  - name: Copy aws credentials
+    template: src=templates/aws_credential dest=/root/.aws/credentials
+  - name: Copy db-back file
+    template: src=files/db-backup.sh dest=/root/db-backup/db-backup.sh
+  - name: Copy upload_db.sh script
+    copy: src=files/upload_db.sh dest=/root/db-backup/AWSS3ConfigManager/configManager/upload_db.sh
+  - name: Create cron job
+    cron: name="Database backup" state=present hour="4" minute="0" job="/root/db-backup/db-backup.sh > /tmp/backup.log 2>&1"
+

@@ -1,0 +1,4 @@
+- name: Install MariaDB Server
+  apt: name=mariadb-server state=latest update_cache=yes force=yes
+- name: Install python module
+  apt: name=python-mysqldb state=installed
