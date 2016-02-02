@@ -12,6 +12,8 @@
   file: path=/tmp/git_clone.sh state=absent
 - name: Copy script to upload log
   copy: src=files/upload-log.sh dest=/root/log-backup/AWSS3ConfigManager/configManager/upload-log.sh mode=0755
+- name: Copy template file
+  template: src=templates/backup-infiles dest=/root/log-backup/infiles
 - name: Copy top script
   copy: src=files/log-backup.sh dest=/root/log-backup/log-backup.sh mode=0755
 - name: Add aws folder
