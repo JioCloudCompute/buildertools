@@ -1,0 +1,7 @@
+###used to install collectd and configue it###
+- hosts: trial
+  vars:
+    influxdbserver: 127.0.0.1
+  sudo: yes
+  tasks:
+  - include: installcollectd.yml

@@ -1,0 +1,22 @@
+- name: Copy the install script
+  copy: src=files/installcollectd.sh dest=/tmp/installcollectd.sh mode=755
+- name: Installing the collectd
+  shell: /bin/bash -c "/tmp/installcollectd.sh"
+- name: create init script
+  copy: src=files/collectd.init dest=/etc/init.d/collectd mode=0755
+
+
+- name: copy the configuration file
+  template: src=templates/collectd.conf dest=/opt/collectd/etc/collectd.conf
+
+- name: ensure collectd user is present
+  user: name=collectd group=sudo shell=/bin/bash
+- name: copy the viminfo file
+  copy: src=files/viminfo.py dest=/home/collectd/viminfo.py mode=0755 owner=collectd
+
+
+- name: permissions on log file
+  file: path=/var/log/collectd.log owner=collectd  mode=0664
+
+- name: start the collectd service
+  service: name=collectd state=restarted
