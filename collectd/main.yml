@@ -1,7 +1,7 @@
 ###used to install collectd and configue it###
-- hosts: compute
+- hosts: trial
   vars:
-    statsdserver: 127.0.0.1
+    influxdbserver: 127.0.0.1
   sudo: yes
   tasks:
   - include: installcollectd.yml

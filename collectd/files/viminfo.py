@@ -9,9 +9,11 @@ import re, sys, os
 import libvirt
 import time
 from xml.etree import ElementTree
-import statsd
 import uuid
+import socket
+
 CPU_TIME_INTERVAL = 60
+HOSTNAME = socket.gethostname()
 
 def fetch_cputime(dom):
     num_cpu = float(dom.info()[3])
@@ -58,30 +60,30 @@ def periodic_metrics_calc(ids, conn):
             prev_cpu_dict[id] = dict()
             prev_cpu_dict[id]['cpu_time'] = cputime
             prev_cpu_dict[id]['utc_time'] = curr_utc_time
-            print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
                   '/percent-vm_cpu_val ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
                   ' N:' + str(percent_cpu))
             #memstats = fetch_memory_stats(dom)
             #for memname in memstats:
             #    print('  '+str(memstats[memname])+' ('+memname+')')
             netstats = fetch_network_stats(dom)
-            #print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            #print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
             #      '/if_octets-vm_interface_rx ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
             #      ' ' + str(netstats[0]) + ':' + str(netstats[1]) + ':' + \
             #      str(netstats[3]))
-            print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
                   '/derive-interface_rx_bytes ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
                   ' N:' + str(netstats[0]))
-            print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
                   '/derive-interface_rx_packets ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
                   ' N:' + str(netstats[1]))
             #print('read errors:   '+str(netstats[2]))
             #print('read drops:    '+str(netstats[3]))
             #print('write bytes:   '+str(netstats[4]))
-            print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
                   '/derive-interface_tx_bytes ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
                   ' N:' + str(netstats[4]))
-            print('PUTVAL kilo-v2-setup/exec-' + str(dom_uuid) + \
+            print('PUTVAL ' + HOSTNAME + '/exec-' + str(dom_uuid) + \
                   '/derive-interface_tx_packets ' + 'interval='+ str(CPU_TIME_INTERVAL) + \
                   ' N:' + str(netstats[5]))
             #print('write packets: '+str(netstats[5]))
