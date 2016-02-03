@@ -1,0 +1,14 @@
+- hosts: all 
+  sudo: yes
+  tasks:
+    - name: Add variables
+      include_vars: "{{ varfile }}"
+
+    - name: copy file
+      template: src="{{ item.file }}" dest="{{ item.target }}"
+      with_items: file_items
+
+    - name: restart services
+      service: name="{{ item }}" state=restarted
+      with_items: service_items
+

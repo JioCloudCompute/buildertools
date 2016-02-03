@@ -9,9 +9,11 @@ limited_host = ""
 if len(sys.argv) >= 5:
   limited_host = sys.argv[4]
 
-call_list = ["ansible-playbook", "-i", inventory, "make_changes.yml", "-u", username, "--extra-vars", "varfile="+infile]
+call_list = ["ansible-playbook", "-i", inventory, "template_changes.yml", "-u", username, "--extra-vars", "varfile="+infile]
 if limited_host:
   call_list.extend(["-l", limited_host])
 
-call(call_list)
+ret = call(call_list)
+if ret != 0:
+  raise Exception('non-zero-code', 'apply-change-failed')
 
