@@ -1,0 +1,13 @@
+- name: Copy config file
+  template: src=templates/apache2_ports.conf dest=/etc/apache2/ports.conf
+
+- name: Remove sites-enabled
+  shell: "rm -rf /etc/apache2/sites-enabled/*"
+
+- name: Add sites available
+  template: src=templates/apache2-site.conf dest="/etc/apache2/sites-available/25-{{ item.name }}.conf"
+  with_items: apache_sites
+
+- name: Add sites enabled
+  shell: "ln -s /etc/apache2/sites-available/* /etc/apache2/sites-enabled"
+

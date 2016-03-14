@@ -1,0 +1,15 @@
+files/25-priority
+files/90proxy
+files/environment
+files/etchosts
+files/resolv.conf
+certs/compute.staging.jiocloudservices.crt
+certs/compute.staging.jiocloudservices.key
+certs/iam.staging.jiocloudservices.com.crt
+certs/vpc.staging.jiocloudservices.com.crt
+certs/sbs.staging.jiocloudservices.com.crt
+group_vars/all
+group_vars/csdb
+group_vars/controller_staging
+compute_team
+inventory

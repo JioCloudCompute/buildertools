@@ -1,0 +1,7 @@
+file_items:
+- file: files/ntp.conf
+  target: /etc/ntp.conf
+
+service_items:
+  - ntp
+

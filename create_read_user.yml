@@ -1,0 +1,8 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - user: name={{ username }}  shell=/bin/bash
+  - name: Placing key
+    authorized_key: user={{ username }} key="{{ lookup('file', '{{ public_key_file }}') }}"
+

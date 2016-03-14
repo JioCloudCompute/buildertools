@@ -2,7 +2,7 @@
 - hosts: cp*
   sudo: yes
   tasks:
-  - include: apt_get_update.yml
+  - include: tasks/apt_get_update.yml
   - name: Install apt packages
     apt:
       pkg: "{{ item }}"
@@ -22,12 +22,12 @@
      - python-novaclient
      - python-requests
      - python-keystoneclient
-     - python-geventhttpclient
-     - python-pycassa
-     - contrail-lib
-     - contrail-nova-driver
-     - contrail-utils
-     - python-contrail
+     #- python-geventhttpclient
+     #- python-pycassa
+     #- contrail-lib
+     #- contrail-nova-driver
+     #- contrail-utils
+     #- python-contrail
      - python-debtcollector
      - python-psutil
      - python-lxml
@@ -35,11 +35,12 @@
      - python-rbd
      - python-neutronclient
      - nova-compute
-     - contrail-vrouter-agent
+     #- contrail-vrouter-agent
      - python-cinderclient
      - ceph
      - python-oslo-log
      - python-oslo-messaging
      - oslo-messaging-zmq-receiver
-     - python-zmq     
-   - include: oslo_zmq_extension.yml
+     - python-zmq 
+     - python-oslo-rootwrap    
+  - include: tasks/oslo_zmq_extension.yml

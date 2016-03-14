@@ -1,0 +1,6 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+    #- lineinfile: dest=/etc/hosts state=absent regexp="^c.*"
+    - lineinfile: dest=/etc/hosts line="{{ lookup('file', 'files/etchosts') }}"

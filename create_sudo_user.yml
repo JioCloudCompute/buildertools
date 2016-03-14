@@ -1,0 +1,8 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - user: name={{ username }} group=sudo shell=/bin/bash state=present
+  - name: Placing key
+    authorized_key: user={{ username }} key="{{ lookup('file', '{{ public_key_file }}') }}"
+  - lineinfile: "dest=/etc/sudoers state=present line='{{username}} ALL=(ALL) NOPASSWD: ALL'"

@@ -1,0 +1,7 @@
+  - user: name={{ item.username }} group=sudo shell=/bin/bash state=present
+    with_items: compute_users
+  - name: Placing key
+    authorized_key: user={{ item.username }} key="{{ item.sshkeys }}"
+    with_items: compute_users
+  - lineinfile: "dest=/etc/sudoers state=present line='{{item.username}} ALL=(ALL) NOPASSWD: ALL'"
+    with_items: compute_users

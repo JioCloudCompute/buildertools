@@ -1,0 +1,13 @@
+  - name: Copy ssl certificate to etc
+    copy: src="{{ jiocloud_cert }}" dest="{{ apache2_cert_file }}" mode=0644
+
+  - name: Copy certificate chain file
+    copy: src="{{ apache2_chain_file }}" dest="/etc/ssl/certs/chain-{{ apache2_server_name }}.key"
+    when: apache2_chain_file is defined
+
+  - name: Add crt to usr
+    command: "cp {{ apache2_cert_file }} /usr/local/share/ca-certificates/{{ apache2_cert_name }}.crt"
+
+  - name: Refresh CA list
+    command: update-ca-certificates --fresh
+
