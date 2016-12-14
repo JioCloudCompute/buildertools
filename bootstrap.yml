@@ -3,7 +3,8 @@
   sudo: yes
   vars:
     old_snapshot: 17
-    new_snapshot: c164c87e-2a91-4dba-a833-9e5d8c0d543c
+    new_snapshot: 96035b0a-0ef9-4ca6-9335-e7950f64f8c2
+    #new_snapshot: c164c87e-2a91-4dba-a833-9e5d8c0d543c
   tasks:
     - file: path=/etc/environment state=file owner=root mode=0644
     - lineinfile: dest=/etc/environment line="{{ lookup('file', 'files/environment') }}"
