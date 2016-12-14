@@ -1,0 +1,7 @@
+file_items:
+- file: files/matchmaker_ring.json
+  target: /etc/oslo/matchmaker_ring.json
+
+service_items:
+  - oslo-messaging-zmq-receiver
+

@@ -1,0 +1,6 @@
+file_items:
+- file: templates/nova.conf
+  target: /etc/nova/nova.conf
+service_items:
+  - nova-compute
+

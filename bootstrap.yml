@@ -18,4 +18,5 @@
     - apt: package=ntp state=present update_cache=yes
     - service: name=ntp state=started
     - apt: package=vim state=present
+    - shell: chsh -s /bin/bash compute_team
 
